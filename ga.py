@@ -27,25 +27,25 @@ def ga(default_dur):
 
 	toolbox = base.Toolbox()
 	toolbox.register("attr_item", random_dur, default_dur, SIGMA)
- 	toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.attr_item)
- 	toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+	toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.attr_item)
+	toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
- 	toolbox.register("evaluate", evaluate)
- 	toolbox.register("edit_net", edit_net)
- 	toolbox.register("mate", tools.cxTwoPoint)
- 	toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=SIGMA, indpb=0.1)
- 	toolbox.register("select", tools.selTournament, tournsize=3)
+	toolbox.register("evaluate", evaluate)
+	toolbox.register("edit_net", edit_net)
+	toolbox.register("mate", tools.cxTwoPoint)
+	toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=SIGMA, indpb=0.1)
+	toolbox.register("select", tools.selTournament, tournsize=3)
 
- 	pop = toolbox.population(n=INIT_SIZE)
+	pop = toolbox.population(n=INIT_SIZE)
 
- 	hof = tools.HallofFame(1) #pick the best one
- 	
- 	pop,log = algorithms.eaSimple(pop,toolbox,cxpb=P_CROSSOVER,mutpb=P_MUTATION,ngen=MAX_ITER,halloffame=hof,verbose=True)
+	hof = tools.HallofFame(1) #pick the best one
 
- 	return hof
+	pop,log = algorithms.eaSimple(pop,toolbox,cxpb=P_CROSSOVER,mutpb=P_MUTATION,ngen=MAX_ITER,halloffame=hof,verbose=True)
+
+	return hof
 
 
-def get_default_TL(file_path):
+def get_default_duration(file_path):
 	import xml.etree.ElementTree as ET
 
 	tree = ET.ElementTree(file = file_path)
@@ -61,22 +61,27 @@ def get_default_TL(file_path):
 
 	return id_TLs,dur_TLs
 
+
 def edit_net(file_path,id_TLs,dur_TLs):
 	import xml.etree.ElementTree as ET
 
 	tree = ET.ElementTree(file = file_path)
 	net = tree.getroot()
-	#trafficLights = net.findall("tlLogic")
+	trafficLights = net.findall("tlLogic")
 
-	for id in id_TLs:
-		net.find('.//tlLogic[@id='+strid)
+	tl_idx = [[tl.attrib['id'] for tl in trafficLights].index(id) for id in id_TLs]
 
+	for i in tl_idx:
+		for j in range(len(dur_TLs[i])):
+			trafficLights[i][j].attrib["duration"] = dur_TLs[i][j]
+
+	tree.write(file_path)
 
 
 #get default phase duration from *.net.xml
-MAP_PATH = "/home/zhenyuli/Sumo/2019-12-20-14-30-08/osm.net.xml"
-id_TLs, dur_TLs = get_default_TL(MAP_PATH)
+MAP_PATH = "/Users/zhenyuli/Local_Workspace/GA_Traffic_Optimization/Sumo/2019-12-20-14-30-08/osm.net.xml"
+id_TLs, dur_TLs = get_default_duration(MAP_PATH)
 
- best_solution = ga(dur_TLs,id_TLs)
- print(hof)
- print(hof.fitness.values)
+best_solution = ga(dur_TLs,id_TLs)
+print(hof)
+print(hof.fitness.values)
