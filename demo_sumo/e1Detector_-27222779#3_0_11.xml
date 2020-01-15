@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Mon Jan 13 20:58:42 2020 by Eclipse SUMO Version 1.2.0
+<!-- generated on Wed Jan 15 17:25:00 2020 by Eclipse SUMO Version 1.4.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="osm.net.xml"/>
-        <route-files value="osm.passenger.trips.xml"/>
-        <additional-files value="osm.poly.xml"/>
+        <net-file value="/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.net.xml"/>
+        <route-files value="/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.passenger.trips.xml"/>
+        <additional-files value="/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.poly.xml"/>
     </input>
 
     <processing>
@@ -24,20 +24,11 @@
     </report>
 
     <traci_server>
-        <remote-port value="55765"/>
+        <remote-port value="37063"/>
     </traci_server>
 
     <gui_only>
-        <gui-settings-file value="osm.view.xml"/>
+        <gui-settings-file value="/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.view.xml"/>
     </gui_only>
 
 </configuration>
--->
-
-<detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/det_e1_file.xsd">
-    <interval begin="0.00" end="900.00" id="e1Detector_-27222779#3_0_11" nVehContrib="34" flow="136.00" occupancy="1.67" speed="11.58" harmonicMeanSpeed="11.32" length="5.00" nVehEntered="35"/>
-    <interval begin="900.00" end="1800.00" id="e1Detector_-27222779#3_0_11" nVehContrib="38" flow="152.00" occupancy="1.81" speed="11.94" harmonicMeanSpeed="11.62" length="5.00" nVehEntered="37"/>
-    <interval begin="1800.00" end="2700.00" id="e1Detector_-27222779#3_0_11" nVehContrib="42" flow="168.00" occupancy="1.96" speed="12.02" harmonicMeanSpeed="11.90" length="5.00" nVehEntered="42"/>
-    <interval begin="2700.00" end="3600.00" id="e1Detector_-27222779#3_0_11" nVehContrib="43" flow="172.00" occupancy="2.78" speed="10.64" harmonicMeanSpeed="8.60" length="5.00" nVehEntered="43"/>
-    <interval begin="3600.00" end="3780.00" id="e1Detector_-27222779#3_0_11" nVehContrib="3" flow="60.00" occupancy="0.70" speed="12.09" harmonicMeanSpeed="11.90" length="5.00" nVehEntered="3"/>
-</detector>

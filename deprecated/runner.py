@@ -129,7 +129,7 @@ def get_options():
     options, args = optParser.parse_args()
     return options
 
-def after_routefile():
+def start_sim():
     #traci.start([sumoBinary, "-c", "osm.sumocfg",
     #                         "--tripinfo-output", "tripinfo.xml"])
     traci.start([sumoBinary, "-c", "osm.sumocfg"])                         

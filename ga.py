@@ -5,15 +5,19 @@ from deap import base
 from deap import creator
 from deap import tools
 
+from sumo_interface import start_sim
+
 def random_dur(default_dur, sigma=1):
+	default_dur = sum(default_dur,[])
 	return np.random.normal(default_dur,sigma*np.ones(len(default_dur)),len(default_dur))
 
-def evaluate():
-	edit_net()
+def evaluation(file_path,id_TLs,dur_TLs):
+	edit_net(file_path,id_TLs,dur_TLs)
 	#--> to sumo api
-	return
+	flow = start_sim("/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
+	return flow,
 
-def ga(default_dur):
+def ga(file_path,default_dur,id_TLs):
 	#parameters
 	INIT_SIZE = 1000
 	MAX_ITER = 10000
@@ -30,15 +34,17 @@ def ga(default_dur):
 	toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.attr_item)
 	toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-	toolbox.register("evaluate", evaluate)
-	toolbox.register("edit_net", edit_net)
+	toolbox.register("evaluate", evaluation, file_path,id_TLs)
+	toolbox.register("edit_net", edit_net,file_path,id_TLs,dur_TLs)
+	toolbox.register("start_sim",start_sim,file_path)
 	toolbox.register("mate", tools.cxTwoPoint)
 	toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=SIGMA, indpb=0.1)
 	toolbox.register("select", tools.selTournament, tournsize=3)
 
 	pop = toolbox.population(n=INIT_SIZE)
 
-	hof = tools.HallofFame(1) #pick the best one
+	hof = tools.HallOfFame(1) #pick the best one
+	stats = tools.Statistics(lambda ind: ind.fitness.values)
 
 	pop,log = algorithms.eaSimple(pop,toolbox,cxpb=P_CROSSOVER,mutpb=P_MUTATION,ngen=MAX_ITER,halloffame=hof,verbose=True)
 
@@ -72,16 +78,19 @@ def edit_net(file_path,id_TLs,dur_TLs):
 	tl_idx = [[tl.attrib['id'] for tl in trafficLights].index(id) for id in id_TLs]
 
 	for i in tl_idx:
-		for j in range(len(dur_TLs[i])):
-			trafficLights[i][j].attrib["duration"] = dur_TLs[i][j]
+		nb_phase = len(trafficLights[i])
+		for j in range(nb_phase):
+			trafficLights[i][j].attrib["duration"] = str(dur_TLs.pop(0))
+		#for j in range(len(dur_TLs[i])):
+		#	trafficLights[i][j].attrib["duration"] = dur_TLs[i][j]
 
 	tree.write(file_path)
 
 
 #get default phase duration from *.net.xml
-MAP_PATH = "/Users/zhenyuli/Local_Workspace/GA_Traffic_Optimization/Sumo/2019-12-20-14-30-08/osm.net.xml"
+MAP_PATH = "/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
 id_TLs, dur_TLs = get_default_duration(MAP_PATH)
 
-best_solution = ga(dur_TLs,id_TLs)
+best_solution = ga(MAP_PATH,dur_TLs,id_TLs)
 print(hof)
 print(hof.fitness.values)
