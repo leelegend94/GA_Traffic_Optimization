@@ -14,8 +14,24 @@ def random_dur(default_dur, sigma=1):
 def evaluation(file_path,id_TLs,dur_TLs):
 	edit_net(file_path,id_TLs,dur_TLs)
 	#--> to sumo api
-	flow = start_sim("/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
+	flow = start_sim("/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
 	return flow,
+
+def checkBounds(min, max):
+    def decorator(func):
+        def wrapper(*args, **kargs):
+            offspring = func(*args, **kargs)
+            for child in offspring:
+                for i in xrange(len(child)):
+                    if child[i] > max:
+                        child[i] = max
+                    elif child[i] < min:
+                        child[i] = min
+            return offspring
+        return wrapper
+    return decorator
+
+
 
 def ga(file_path,default_dur,id_TLs):
 	#parameters
@@ -39,6 +55,9 @@ def ga(file_path,default_dur,id_TLs):
 	toolbox.register("start_sim",start_sim,file_path)
 	toolbox.register("mate", tools.cxTwoPoint)
 	toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=SIGMA, indpb=0.1)
+
+	toolbox.decorate("mutate", checkBounds(MIN, MAX))# Bounds are still needed to be set.
+
 	toolbox.register("select", tools.selTournament, tournsize=3)
 
 	pop = toolbox.population(n=INIT_SIZE)
@@ -88,7 +107,7 @@ def edit_net(file_path,id_TLs,dur_TLs):
 
 
 #get default phase duration from *.net.xml
-MAP_PATH = "/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
+MAP_PATH = "/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
 id_TLs, dur_TLs = get_default_duration(MAP_PATH)
 
 best_solution = ga(MAP_PATH,dur_TLs,id_TLs)
