@@ -9,12 +9,18 @@ from sumo_interface import start_sim
 
 def random_dur(default_dur, sigma=1):
 	default_dur = sum(default_dur,[])
-	return np.random.normal(default_dur,sigma*np.ones(len(default_dur)),len(default_dur))
+	return np.clip(np.random.normal(default_dur,sigma*np.ones(len(default_dur)),len(default_dur)),1,60)
 
 def evaluation(file_path,id_TLs,dur_TLs):
 	edit_net(file_path,id_TLs,dur_TLs)
 	#--> to sumo api
-	flow = start_sim("/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
+	#flow = start_sim("/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
+	flow = start_sim("/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
+	print("##############################################################")
+	print("##############################################################")
+	print("current flow: ", flow)
+	print("##############################################################")
+	print("##############################################################")
 	return flow,
 
 def checkBounds(min, max):
@@ -40,6 +46,8 @@ def ga(file_path,default_dur,id_TLs):
 	SIGMA = 1
 	P_CROSSOVER = 0.5
 	P_MUTATION = 0.1
+	MIN = 1
+	MAX = 60
 
 	#DEAP
 	creator.create("FitnessMax",base.Fitness,weights=(1.0,)) #maximize traffic flow
@@ -107,7 +115,8 @@ def edit_net(file_path,id_TLs,dur_TLs):
 
 
 #get default phase duration from *.net.xml
-MAP_PATH = "/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
+#MAP_PATH = "/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
+MAP_PATH = "/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
 id_TLs, dur_TLs = get_default_duration(MAP_PATH)
 
 best_solution = ga(MAP_PATH,dur_TLs,id_TLs)
