@@ -15,13 +15,19 @@ def evaluation(file_path,id_TLs,dur_TLs):
 	edit_net(file_path,id_TLs,dur_TLs)
 	#--> to sumo api
 	#flow = start_sim("/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
-	flow = start_sim("/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
+	start_sim("/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
+	import xml.etree.ElementTree as ET
+	from numpy import mean
+	tree = ET.ElementTree(file = "/home/zhenyuli/workspace/GA_Traffic_Optimization/result.xml")
+	trip_infos = tree.getroot()
+	timeLoss = mean([float(trip.attrib['timeLoss']) for trip in trip_infos])
+
 	print("##############################################################")
 	print("##############################################################")
-	print("current flow: ", flow)
+	print("avg time loss: ", timeLoss)
 	print("##############################################################")
 	print("##############################################################")
-	return flow,
+	return timeLoss,
 
 def checkBounds(min, max):
     def decorator(func):
