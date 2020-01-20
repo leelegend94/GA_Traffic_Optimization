@@ -50,8 +50,8 @@ def ga(file_path,default_dur,id_TLs):
 	MAX = 60
 
 	#DEAP
-	creator.create("FitnessMax",base.Fitness,weights=(1.0,)) #maximize traffic flow
-	creator.create("Individual",list,fitness=creator.FitnessMax) #individuals are returned in list
+	creator.create("FitnessMin",base.Fitness,weights=(1.0,)) #maximize traffic flow
+	creator.create("Individual",list,fitness=creator.FitnessMin) #individuals are returned in list
 
 	toolbox = base.Toolbox()
 	toolbox.register("attr_item", random_dur, default_dur, SIGMA)
