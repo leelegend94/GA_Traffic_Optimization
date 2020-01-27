@@ -25,12 +25,14 @@ def start_sim(path,gui=False):
 	else:
 		sumoBinary = checkBinary('sumo')
 
-	traci.start([sumoBinary, "-c", path])
+	traci.start([sumoBinary, "-c", path,"--tripinfo-output","result.xml"])
+	#traci.start([sumoBinary, "-c", path])
 
-	#VehicleNumber = 0
+
+	VehicleNumber = 0
 	while traci.simulation.getMinExpectedNumber() > 0:
 		traci.simulationStep()
-		'''
+		
 		VehicleNumber += traci.inductionloop.getLastStepVehicleNumber("e1Detector_-51508352#1_0_2") \
 					+ traci.inductionloop.getLastStepVehicleNumber("e1Detector_51508352#1_0_1") \
 					+ traci.inductionloop.getLastStepVehicleNumber("e1Detector_376401312#0_0_4") \
@@ -56,5 +58,6 @@ def start_sim(path,gui=False):
 			halting = len([1 for d in scResults.values() if d[tc.VAR_SPEED] < 0.1])
 			meanSpeedRelative = sum(relSpeeds) / running
 			timeLoss = (1 - meanSpeedRelative) * running * stepLength
+		'''
 	traci.close()
-	return timeLoss
+	return VehicleNumber

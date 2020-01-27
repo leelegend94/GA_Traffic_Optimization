@@ -3401,34 +3401,34 @@
     </edge>
 
     <tlLogic id="345553442" offset="0" programID="0" type="actuated">
-        <phase duration="39.99797821714302" maxDur="50" minDur="5" state="GGgrrrrGgg" />
-        <phase duration="3.8003376865797063" state="yyyrrrryyy" />
-        <phase duration="43.13063500641336" maxDur="50" minDur="5" state="rrrGGGGrrr" />
-        <phase duration="1.0" state="rrryyyyrrr" />
+        <phase duration="39.54576409345087" maxDur="50" minDur="5" state="GGgrrrrGgg" />
+        <phase duration="1.0" state="yyyrrrryyy" />
+        <phase duration="45.152505696410955" maxDur="50" minDur="5" state="rrrGGGGrrr" />
+        <phase duration="2.9515530798128014" state="rrryyyyrrr" />
     </tlLogic>
     <tlLogic id="967091764" offset="0" programID="0" type="actuated">
-        <phase duration="21.01951109755327" maxDur="50" minDur="5" state="rrrrrrrGGG" />
-        <phase duration="2.677573646847078" state="rrrrrrryyy" />
-        <phase duration="30.52048466057245" maxDur="50" minDur="5" state="rrrGGGGrrr" />
-        <phase duration="5.871292957844182" state="rrryyyyrrr" />
-        <phase duration="22.098924663768976" maxDur="50" minDur="5" state="GGgGrrrrrr" />
-        <phase duration="5.825129263851983" state="yyyyrrrrrr" />
+        <phase duration="29.97326290086217" maxDur="50" minDur="5" state="rrrrrrrGGG" />
+        <phase duration="2.4129171161118017" state="rrrrrrryyy" />
+        <phase duration="28.733184407720156" maxDur="50" minDur="5" state="rrrGGGGrrr" />
+        <phase duration="2.710222482137952" state="rrryyyyrrr" />
+        <phase duration="23.93538587594785" maxDur="50" minDur="5" state="GGgGrrrrrr" />
+        <phase duration="1.0" state="yyyyrrrrrr" />
     </tlLogic>
     <tlLogic id="cluster_2269419707_345553456" offset="0" programID="0" type="actuated">
-        <phase duration="47.07961563165111" maxDur="50" minDur="5" state="GggGGgrrr" />
-        <phase duration="3.444434970744855" state="yyyyyyrrr" />
-        <phase duration="47.083854914272806" maxDur="50" minDur="5" state="rrrrrrGGG" />
-        <phase duration="6.272429857292661" state="rrrrrryyy" />
+        <phase duration="47.19934911924979" maxDur="50" minDur="5" state="GggGGgrrr" />
+        <phase duration="8.355808949304096" state="yyyyyyrrr" />
+        <phase duration="50.12346869527406" maxDur="50" minDur="5" state="rrrrrrGGG" />
+        <phase duration="4.7753465557032895" state="rrrrrryyy" />
     </tlLogic>
     <tlLogic id="cluster_29564155_3953206284_3953206285_3953206286_3953206287_922831093_967091796" offset="0" programID="0" type="actuated">
-        <phase duration="19.63526179668697" maxDur="50" minDur="5" state="rrrrrrrrrrrGGGGG" />
-        <phase duration="6.269507912906622" state="rrrrrrrrrrryyyyy" />
-        <phase duration="20.22728085607514" maxDur="50" minDur="5" state="GrrGgGgrrrgGrrrr" />
-        <phase duration="2.5181496111604615" state="yrryyyyrrryyrrrr" />
-        <phase duration="18.735109369083105" maxDur="50" minDur="5" state="GGGrrrrrrrgGrrrr" />
-        <phase duration="3.93897675587763" state="yyyrrrrrrryyrrrr" />
-        <phase duration="22.401509030204785" maxDur="50" minDur="5" state="rrrrrrrGGGgGrrrr" />
-        <phase duration="1.0" state="rrrrrrryyyyyrrrr" />
+        <phase duration="21.06236768847316" maxDur="50" minDur="5" state="rrrrrrrrrrrGGGGG" />
+        <phase duration="6.583887789438718" state="rrrrrrrrrrryyyyy" />
+        <phase duration="18.017982008140272" maxDur="50" minDur="5" state="GrrGgGgrrrgGrrrr" />
+        <phase duration="2.823149056762178" state="yrryyyyrrryyrrrr" />
+        <phase duration="16.352884349815646" maxDur="50" minDur="5" state="GGGrrrrrrrgGrrrr" />
+        <phase duration="5.792433188190436" state="yyyrrrrrrryyrrrr" />
+        <phase duration="26.493089873756666" maxDur="50" minDur="5" state="rrrrrrrGGGgGrrrr" />
+        <phase duration="5.165614731483432" state="rrrrrrryyyyyrrrr" />
     </tlLogic>
 
     <junction id="130355233" incLanes="117849719#1_0 -117849719#2_0" intLanes=":130355233_0_0 :130355233_1_0 :130355233_2_0 :130355233_3_0" shape="768.74,364.83 770.61,364.11 770.46,363.27 770.55,362.93 770.75,362.63 771.05,362.38 771.47,362.17 769.18,356.19 764.46,358.03 766.81,363.98 767.64,363.83 767.99,363.92 768.29,364.12 768.54,364.42" type="right_before_left" x="767.98" y="360.08">

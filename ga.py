@@ -14,11 +14,11 @@ def random_dur(default_dur, sigma=1):
 def evaluation(file_path,id_TLs,dur_TLs):
 	edit_net(file_path,id_TLs,dur_TLs)
 	#--> to sumo api
-	#flow = start_sim("/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
-	flow = start_sim("/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
+	flow = start_sim("/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
+	#flow = start_sim("/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
 	print("##############################################################")
 	print("##############################################################")
-	print("current flow: ", flow)
+	print("TIME Loss: ", flow)
 	print("##############################################################")
 	print("##############################################################")
 	return flow,
@@ -115,8 +115,8 @@ def edit_net(file_path,id_TLs,dur_TLs):
 
 
 #get default phase duration from *.net.xml
-#MAP_PATH = "/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
-MAP_PATH = "/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
+MAP_PATH = "/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
+#MAP_PATH = "/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
 id_TLs, dur_TLs = get_default_duration(MAP_PATH)
 
 best_solution = ga(MAP_PATH,dur_TLs,id_TLs)
