@@ -29,10 +29,10 @@ def start_sim(path,gui=False):
 	#traci.start([sumoBinary, "-c", path])
 
 
-	VehicleNumber = 0
+	#VehicleNumber = 0
 	while traci.simulation.getMinExpectedNumber() > 0:
 		traci.simulationStep()
-		
+		'''
 		VehicleNumber += traci.inductionloop.getLastStepVehicleNumber("e1Detector_-51508352#1_0_2") \
 					+ traci.inductionloop.getLastStepVehicleNumber("e1Detector_51508352#1_0_1") \
 					+ traci.inductionloop.getLastStepVehicleNumber("e1Detector_376401312#0_0_4") \
@@ -49,15 +49,7 @@ def start_sim(path,gui=False):
 					+ traci.inductionloop.getLastStepVehicleNumber("e1Detector_-40317921#0_0_15") \
 					+ traci.inductionloop.getLastStepVehicleNumber("e1Detector_40317921#0_0_16")
 		'''
-		scResults = traci.junction.getContextSubscriptionResults(junctionID)
-		halting = 0
-		if scResults:
-			relSpeeds = [d[tc.VAR_SPEED] / d[tc.VAR_ALLOWED_SPEED] for d in scResults.values()]
-			# compute values corresponding to summary-output
-			running = len(relSpeeds)
-			halting = len([1 for d in scResults.values() if d[tc.VAR_SPEED] < 0.1])
-			meanSpeedRelative = sum(relSpeeds) / running
-			timeLoss = (1 - meanSpeedRelative) * running * stepLength
-		'''
+		
+
 	traci.close()
-	return VehicleNumber
+	#return VehicleNumber
