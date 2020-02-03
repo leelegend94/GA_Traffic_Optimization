@@ -16,11 +16,12 @@ def evaluation(file_path,id_TLs,dur_TLs):
 	#--> to sumo api
 
 
-	#flow = start_sim("/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
-	start_sim("/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
+	start_sim("/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
+	#start_sim("/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
 	import xml.etree.ElementTree as ET
 	from numpy import mean
-	tree = ET.ElementTree(file = "/home/zhenyuli/workspace/GA_Traffic_Optimization/result.xml")
+	tree = ET.ElementTree(file = "/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/result.xml")
+	#tree = ET.ElementTree(file = "/home/zhenyuli/workspace/GA_Traffic_Optimization/result.xml")
 	trip_infos = tree.getroot()
 	timeLoss = mean([float(trip.attrib['timeLoss']) for trip in trip_infos])
 
@@ -70,7 +71,7 @@ def ga(file_path,default_dur,id_TLs):
 	toolbox.register("evaluate", evaluation, file_path,id_TLs)
 	toolbox.register("edit_net", edit_net,file_path,id_TLs,dur_TLs)
 	toolbox.register("start_sim",start_sim,file_path)
-	toolbox.register("mate", tools.cxTwoPoint)
+	toolbox.register("mate", tools.cxOnePoint)
 	toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=SIGMA, indpb=0.1)
 
 	toolbox.decorate("mutate", checkBounds(MIN, MAX))# Bounds are still needed to be set.
