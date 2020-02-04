@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 
 from deap import algorithms
 from deap import base
@@ -9,26 +10,29 @@ from sumo_interface import start_sim
 
 def random_dur(default_dur, sigma=1):
 	default_dur = sum(default_dur,[])
-	return np.clip(np.random.normal(default_dur,sigma*np.ones(len(default_dur)),len(default_dur)),1,60)
+	result =  np.clip(np.random.normal(default_dur,sigma*np.ones(len(default_dur)),len(default_dur)),0.5,60)
+	print("generated: ",result)
+	return result
 
-def evaluation(file_path,id_TLs,dur_TLs):
+def evaluation(file_path,id_TLs,dur_TLs_):
+	dur_TLs = copy.deepcopy(dur_TLs_)
+	print("eval ind: ",dur_TLs)
 	edit_net(file_path,id_TLs,dur_TLs)
 	#--> to sumo api
 
 
-	start_sim("/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
-	#start_sim("/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
+	#start_sim("/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
+	start_sim("/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
 	import xml.etree.ElementTree as ET
 	from numpy import mean
-	tree = ET.ElementTree(file = "/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/result.xml")
-	#tree = ET.ElementTree(file = "/home/zhenyuli/workspace/GA_Traffic_Optimization/result.xml")
+	#tree = ET.ElementTree(file = "/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/result.xml")
+	tree = ET.ElementTree(file = "/home/zhenyuli/workspace/GA_Traffic_Optimization/result.xml")
 	trip_infos = tree.getroot()
 	timeLoss = mean([float(trip.attrib['timeLoss']) for trip in trip_infos])
 
 	print("##############################################################")
 	print("##############################################################")
 	print("avg time loss: ", timeLoss)
-
 	print("##############################################################")
 	print("##############################################################")
 	return timeLoss,
@@ -38,7 +42,7 @@ def checkBounds(min, max):
         def wrapper(*args, **kargs):
             offspring = func(*args, **kargs)
             for child in offspring:
-                for i in xrange(len(child)):
+                for i in range(len(child)):
                     if child[i] > max:
                         child[i] = max
                     elif child[i] < min:
@@ -46,13 +50,21 @@ def checkBounds(min, max):
             return offspring
         return wrapper
     return decorator
-
-
-
+'''
+def printsel():
+    def decorator(func):
+        def wrapper(*args, **kargs):
+            print(*args)
+            result = func(*args, **kargs)
+            print("selected",result)
+            return result
+        return wrapper
+    return decorator
+'''
 def ga(file_path,default_dur,id_TLs):
 	#parameters
-	INIT_SIZE = 1000
-	MAX_ITER = 10000
+	INIT_SIZE = 100
+	MAX_ITER = 100
 	SIGMA = 1
 	P_CROSSOVER = 0.5
 	P_MUTATION = 0.1
@@ -60,7 +72,7 @@ def ga(file_path,default_dur,id_TLs):
 	MAX = 60
 
 	#DEAP
-	creator.create("FitnessMin",base.Fitness,weights=(1.0,)) #maximize traffic flow
+	creator.create("FitnessMin",base.Fitness,weights=(-1.0,)) 
 	creator.create("Individual",list,fitness=creator.FitnessMin) #individuals are returned in list
 
 	toolbox = base.Toolbox()
@@ -72,11 +84,12 @@ def ga(file_path,default_dur,id_TLs):
 	toolbox.register("edit_net", edit_net,file_path,id_TLs,dur_TLs)
 	toolbox.register("start_sim",start_sim,file_path)
 	toolbox.register("mate", tools.cxOnePoint)
+	#toolbox.register("mate", crossover)
 	toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=SIGMA, indpb=0.1)
-
 	toolbox.decorate("mutate", checkBounds(MIN, MAX))# Bounds are still needed to be set.
 
-	toolbox.register("select", tools.selTournament, tournsize=3)
+	toolbox.register("select", tools.selTournament, tournsize=5)
+	#toolbox.decorate("select", printsel())
 
 	pop = toolbox.population(n=INIT_SIZE)
 
@@ -125,10 +138,10 @@ def edit_net(file_path,id_TLs,dur_TLs):
 
 
 #get default phase duration from *.net.xml
-MAP_PATH = "/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
-#MAP_PATH = "/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
+#MAP_PATH = "/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
+MAP_PATH = "/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
 id_TLs, dur_TLs = get_default_duration(MAP_PATH)
 
 best_solution = ga(MAP_PATH,dur_TLs,id_TLs)
-print(hof)
-print(hof.fitness.values)
+print("best solution is: ",best_solution[0])
+print("best time loss", best_solution[0].fitness.values)
