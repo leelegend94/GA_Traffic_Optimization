@@ -11,24 +11,23 @@ from sumo_interface import start_sim
 def random_dur(default_dur, sigma=1):
 	default_dur = sum(default_dur,[])
 	result =  np.clip(np.random.normal(default_dur,sigma*np.ones(len(default_dur)),len(default_dur)),0.5,60)
-	print("generated: ",result)
+	#print("generated: ",result)
 	return result
 
 def evaluation(file_path,id_TLs,dur_TLs_):
 	dur_TLs = copy.deepcopy(dur_TLs_)
-	print("eval ind: ",dur_TLs)
+	#print("eval ind: ",dur_TLs)
 	edit_net(file_path,id_TLs,dur_TLs)
 	#--> to sumo api
 
-
 	#start_sim("/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
-	start_sim("/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.sumocfg")
+	start_sim(file_path+"/osm.sumocfg")
 	import xml.etree.ElementTree as ET
 	from numpy import mean
 	#tree = ET.ElementTree(file = "/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/result.xml")
 	tree = ET.ElementTree(file = "/home/zhenyuli/workspace/GA_Traffic_Optimization/result.xml")
 	trip_infos = tree.getroot()
-	timeLoss = mean([float(trip.attrib['timeLoss']) for trip in trip_infos])
+	timeLoss = mean([float(trip.attrib['timeLoss']) for trip in trip_infos.findall("tripinfo")])
 
 	print("##############################################################")
 	print("##############################################################")
@@ -63,12 +62,12 @@ def printsel():
 '''
 def ga(file_path,default_dur,id_TLs):
 	#parameters
-	INIT_SIZE = 100
-	MAX_ITER = 100
+	INIT_SIZE = 6
+	MAX_ITER = 2
 	SIGMA = 1
 	P_CROSSOVER = 0.5
 	P_MUTATION = 0.1
-	MIN = 1
+	MIN = 0.5
 	MAX = 60
 
 	#DEAP
@@ -84,7 +83,7 @@ def ga(file_path,default_dur,id_TLs):
 	toolbox.register("edit_net", edit_net,file_path,id_TLs,dur_TLs)
 	toolbox.register("start_sim",start_sim,file_path)
 	toolbox.register("mate", tools.cxOnePoint)
-	#toolbox.register("mate", crossover)
+	#toolbox.register("mate", crossover)23.789012557077626
 	toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=SIGMA, indpb=0.1)
 	toolbox.decorate("mutate", checkBounds(MIN, MAX))# Bounds are still needed to be set.
 
@@ -95,16 +94,20 @@ def ga(file_path,default_dur,id_TLs):
 
 	hof = tools.HallOfFame(1) #pick the best one
 	stats = tools.Statistics(lambda ind: ind.fitness.values)
+	stats.register("avg", np.mean)
+	stats.register("std", np.std)
+	stats.register("min", np.min)
+	stats.register("max", np.max)
 
-	pop,log = algorithms.eaSimple(pop,toolbox,cxpb=P_CROSSOVER,mutpb=P_MUTATION,ngen=MAX_ITER,halloffame=hof,verbose=True)
+	pop,log = algorithms.eaSimple(pop,toolbox,cxpb=P_CROSSOVER,mutpb=P_MUTATION,ngen=MAX_ITER,stats=stats,halloffame=hof,verbose=True)
 
-	return hof
+	return hof,log
 
 
 def get_default_duration(file_path):
 	import xml.etree.ElementTree as ET
 
-	tree = ET.ElementTree(file = file_path)
+	tree = ET.ElementTree(file = file_path+"/osm.net.xml")
 	net = tree.getroot()
 	trafficLights = net.findall("tlLogic")
 
@@ -121,7 +124,7 @@ def get_default_duration(file_path):
 def edit_net(file_path,id_TLs,dur_TLs):
 	import xml.etree.ElementTree as ET
 
-	tree = ET.ElementTree(file = file_path)
+	tree = ET.ElementTree(file = file_path+"/osm.net.xml")
 	net = tree.getroot()
 	trafficLights = net.findall("tlLogic")
 
@@ -134,14 +137,20 @@ def edit_net(file_path,id_TLs,dur_TLs):
 		#for j in range(len(dur_TLs[i])):
 		#	trafficLights[i][j].attrib["duration"] = dur_TLs[i][j]
 
-	tree.write(file_path)
+	tree.write(file_path+"/osm.net.xml")
 
 
 #get default phase duration from *.net.xml
 #MAP_PATH = "/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
-MAP_PATH = "/home/zhenyuli/workspace/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
+MAP_PATH = "/home/zhenyuli/workspace/GA_Traffic_Optimization/wuhan"
 id_TLs, dur_TLs = get_default_duration(MAP_PATH)
 
-best_solution = ga(MAP_PATH,dur_TLs,id_TLs)
+best_solution,log = ga(MAP_PATH,dur_TLs,id_TLs)
 print("best solution is: ",best_solution[0])
 print("best time loss", best_solution[0].fitness.values)
+
+gen = log.select("gen")
+fit_mins = log.select("avg")
+import matplotlib.pyplot as plt
+plt.plot(gen, fit_mins)
+plt.show()
