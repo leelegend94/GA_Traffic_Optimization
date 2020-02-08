@@ -24,8 +24,8 @@ def evaluation(file_path,id_TLs,dur_TLs_):
 	start_sim(file_path+"/osm.sumocfg")
 	import xml.etree.ElementTree as ET
 	from numpy import mean
-	#tree = ET.ElementTree(file = "/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/result.xml")
-	tree = ET.ElementTree(file = "/home/zhenyuli/workspace/GA_Traffic_Optimization/result.xml")
+	tree = ET.ElementTree(file = "/home/lin/workspace/GA/GA_Traffic_Optimization/result.xml")
+	#tree = ET.ElementTree(file = "/home/zhenyuli/workspace/GA_Traffic_Optimization/result.xml")
 	trip_infos = tree.getroot()
 	timeLoss = mean([float(trip.attrib['timeLoss']) for trip in trip_infos.findall("tripinfo")])
 
@@ -141,8 +141,8 @@ def edit_net(file_path,id_TLs,dur_TLs):
 
 
 #get default phase duration from *.net.xml
-#MAP_PATH = "/home/lynn/workspace/Untitled Folder/GA_Traffic_Optimization/demo_sumo/osm.net.xml"
-MAP_PATH = "/home/zhenyuli/workspace/GA_Traffic_Optimization/wuhan"
+MAP_PATH = "/home/lin/workspace/GA/GA_Traffic_Optimization/wuhan"
+#MAP_PATH = "/home/zhenyuli/workspace/GA_Traffic_Optimization/wuhan"
 id_TLs, dur_TLs = get_default_duration(MAP_PATH)
 
 best_solution,log = ga(MAP_PATH,dur_TLs,id_TLs)
@@ -151,6 +151,11 @@ print("best time loss", best_solution[0].fitness.values)
 
 gen = log.select("gen")
 fit_mins = log.select("avg")
-import matplotlib.pyplot as plt
-plt.plot(gen, fit_mins)
-plt.show()
+import plotly.graph_objects as go
+import numpy as np
+
+#x = np.arange(10)
+
+fig = go.Figure(data=go.Scatter(x=gen, y=fit_mins, mode='lines+markers'))
+fig.update_layout(title='The performance of GA')
+fig.show()
