@@ -1,5 +1,6 @@
 import numpy as np
-import copy
+import copy,os
+import argparse
 
 from deap import algorithms
 from deap import base
@@ -24,8 +25,8 @@ def evaluation(file_path,id_TLs,dur_TLs_):
 	start_sim(file_path+"/osm.sumocfg")
 	import xml.etree.ElementTree as ET
 	from numpy import mean
-	tree = ET.ElementTree(file = "/home/lin/workspace/GA/GA_Traffic_Optimization/result.xml")
-	#tree = ET.ElementTree(file = "/home/zhenyuli/workspace/GA_Traffic_Optimization/result.xml")
+	#tree = ET.ElementTree(file = "/home/lin/workspace/GA/GA_Traffic_Optimization/result.xml")
+	tree = ET.ElementTree(file = "./result.xml")
 	trip_infos = tree.getroot()
 	timeLoss = mean([float(trip.attrib['timeLoss']) for trip in trip_infos.findall("tripinfo")])
 
@@ -139,10 +140,14 @@ def edit_net(file_path,id_TLs,dur_TLs):
 
 	tree.write(file_path+"/osm.net.xml")
 
+#----------------------------------------------------------------------#
+parser = argparse.ArgumentParser()
+parser.add_argument('--map_path','-m',help='path to map files. default: ~/workspace/GA_Traffic_Optimization/wuhan',default='~/workspace/GA_Traffic_Optimization/wuhan')
+args = parser.parse_args()
 
 #get default phase duration from *.net.xml
-MAP_PATH = "/home/lin/workspace/GA/GA_Traffic_Optimization/wuhan"
-#MAP_PATH = "/home/zhenyuli/workspace/GA_Traffic_Optimization/wuhan"
+#MAP_PATH = os.path.expanduser("~/workspace/GA_Traffic_Optimization/wuhan")
+MAP_PATH = os.path.expanduser(args.map_path)
 id_TLs, dur_TLs = get_default_duration(MAP_PATH)
 
 best_solution,log = ga(MAP_PATH,dur_TLs,id_TLs)
